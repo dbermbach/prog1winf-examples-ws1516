@@ -15,5 +15,5 @@ public class ListEntry {
 	
 	/**reference to the successor of this list entry*/
 	public ListEntry next;
-	// 	add "ListEntry prev;" for doubly linked de.tuberlin.ise.prog1winf.list 
+	// 	add "ListEntry prev;" for doubly linked list 
 }
