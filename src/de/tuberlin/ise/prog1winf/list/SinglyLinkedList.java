@@ -37,6 +37,20 @@ public class SinglyLinkedList {
 		last.next = current;
 	}
 
+	
+	public void appendNeu(Object value){
+		ListEntry neu = new ListEntry();
+		neu.value = value;
+		if(head==null){
+			head = neu;
+			return;
+		}
+		ListEntry temp = head;
+		while(temp.next!= null)temp = temp.next;
+		
+		temp.next = neu;
+	}
+	
 	/**
 	 * inserts a value at the head of the list
 	 * 
