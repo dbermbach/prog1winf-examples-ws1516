@@ -10,32 +10,31 @@ package de.tuberlin.ise.prog1winf.concurrency;
  */
 public class WaitNotify {
 
-	 volatile int value = 0;
-	 volatile boolean produced = false;
-	 volatile Long failedTries = 0L;
+	volatile int value = 0;
+	volatile boolean produced = false;
+	volatile Long failedTries = 0L;
 
-	void produce(){
+	void produce() {
 		value++;
 		produced = true;
 	}
-	
-	 void consume(){
+
+	void consume() {
 		produced = false;
 	}
-	
-	 void failedTry() {
-			synchronized (failedTries) {
-				failedTries++;	
-			}
+
+	void failedTry() {
+		synchronized (failedTries) {
+			failedTries++;
 		}
-		
-		long getFailedTries(){
-			synchronized (failedTries) {
-			return failedTries;	
-			}
+	}
+
+	long getFailedTries() {
+		synchronized (failedTries) {
+			return failedTries;
 		}
-	
-	
+	}
+
 	/**
 	 * @param args
 	 * @throws InterruptedException
@@ -51,14 +50,15 @@ public class WaitNotify {
 		c.interrupt();
 		p.join();
 		c.join();
-		System.out.println("failed tries: "+wn.getFailedTries());
+		System.out.println("failed tries: " + wn.getFailedTries());
 	}
 
 }
 
 class ProducerWaitNotify extends Thread {
-	
+
 	private WaitNotify wn;
+
 	/**
 	 * @param wn
 	 */
@@ -76,7 +76,7 @@ class ProducerWaitNotify extends Thread {
 		while (!isInterrupted()) {
 			synchronized (wn) {
 				while (wn.produced) {
-//					System.out.println("Cannot produce :(...");
+					// System.out.println("Cannot produce :(...");
 					wn.failedTry();
 					try {
 						wn.wait();
@@ -84,11 +84,11 @@ class ProducerWaitNotify extends Thread {
 						this.interrupt();
 					}
 				}
-				System.out.println("Produced " + (wn.value+1));
+				System.out.println("Produced " + (wn.value + 1));
 				wn.produce();
 				wn.notify();
 			}
-			
+
 		}
 		System.out.println("Producer is terminated.");
 	}
@@ -96,15 +96,16 @@ class ProducerWaitNotify extends Thread {
 }
 
 class ConsumerWaitNotify extends Thread {
-	
+
 	private WaitNotify wn;
+
 	/**
 	 * @param wn
 	 */
 	public ConsumerWaitNotify(WaitNotify wn) {
 		this.wn = wn;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,7 +116,7 @@ class ConsumerWaitNotify extends Thread {
 		while (!isInterrupted()) {
 			synchronized (wn) {
 				while (!wn.produced) {
-//					System.out.println("Cannot consume :(...");
+					// System.out.println("Cannot consume :(...");
 					wn.failedTry();
 					try {
 						wn.wait();
@@ -127,7 +128,7 @@ class ConsumerWaitNotify extends Thread {
 				wn.consume();
 				wn.notify();
 			}
-			
+
 		}
 		System.out.println("Consumer is terminated.");
 	}
